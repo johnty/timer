@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     long count = 0;
     while (true) {
         //find current time;
-        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+        duration = (std::clock()-start)/(double)CLOCKS_PER_SEC;
         if (port.getPendingReads() > 0) {
             Bottle *input = port.read();
             if (input!=NULL) {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
         }
         
         //if reached polling interval, reset count + measure FPS
-        if (duration >= 2.0) {
+        if (duration >= t) {
             start = std::clock();
             cout <<"received " << count << " frames in "<< t <<" seconds; FPS = "<<count/t <<endl<<endl;
             count = 0; //reset counter
