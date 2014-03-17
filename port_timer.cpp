@@ -48,10 +48,10 @@ int main(int argc, char *argv[]) {
                 count++;
                 if (verbose)
                     cout << "got " << input->toString().c_str() << endl;
-                //double total = 0;
-                //for (int i=0; i<input->size(); i++) {
-                //    total += input->get(i).asDouble();
-                //}
+                double total = 0;
+                for (int i=1; i<input->size(); i++) {
+                    total += input->get(i).asDouble();
+                }
             }
         }
         

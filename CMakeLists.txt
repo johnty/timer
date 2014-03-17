@@ -13,3 +13,4 @@ LINK_LIBRARIES(${YARP_LIBRARIES})
 INCLUDE_DIRECTORIES(${YARP_INCLUDE_DIRS})
 
 ADD_EXECUTABLE(port_timer port_timer.cpp)
+ADD_EXECUTABLE(simple_sender simple_sender.cpp)
