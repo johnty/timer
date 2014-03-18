@@ -3,3 +3,5 @@ Makefile
 CMakeFiles
 *.cmake
 *.o
+simple_sender
+port_timer
