@@ -14,3 +14,5 @@ INCLUDE_DIRECTORIES(${YARP_INCLUDE_DIRS})
 
 ADD_EXECUTABLE(port_timer port_timer.cpp)
 ADD_EXECUTABLE(simple_sender simple_sender.cpp)
+ADD_EXECUTABLE(port_recorder port_recorder.cpp)
+ADD_EXECUTABLE(port_playback port_playback.cpp)
