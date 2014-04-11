@@ -7,7 +7,7 @@
 #ifdef WIN32
 #include <Windows.h>
 #else
-#include <signal.h>
+#include <csignal>
 #endif
 
 
@@ -22,7 +22,7 @@ BOOL CtrlHandler( DWORD fdwCtrlType )
 { 
   switch( fdwCtrlType ) 
   { 
-    // Handle the CTRL-C signal. 
+    // Handle the CTRL-C signal; windows
     case CTRL_C_EVENT: 
       printf( "Ctrl-C event\n\n" );
       Beep( 750, 300 ); 
@@ -33,9 +33,13 @@ BOOL CtrlHandler( DWORD fdwCtrlType )
   } 
 }
 #else
-void my_handler(sig_t s){
-           printf("Caught signal %d\n",s);
-           cont = false;
+    // signal, unix
+void signalHandler( int signum )
+{
+    cout << "Interrupt signal (" << signum << ") received.\n";
+    cont = false;
+    //exit(signum);
+
 }
 #endif
 
@@ -45,7 +49,7 @@ int main(int argc, char *argv[]) {
 		printf( "\nThe Control Handler is installed.\n" ); 
 	}
 #else
-	signal(SIGINT, my_handler);
+    std::signal(SIGINT, signalHandler);
 #endif
 
     Network yarp;
@@ -90,7 +94,7 @@ int main(int argc, char *argv[]) {
 			}
 			elapsed = std::clock() - start;
 			input = port.read();
-			input->add(elapsed); //too bad this is at end; find out how to add to beginning!
+			input->add((int)elapsed); //too bad this is at end; find out how to add to beginning!
 			fprintf(fout,"%s\n", input->toString().c_str());
         }
         //parse bottle
