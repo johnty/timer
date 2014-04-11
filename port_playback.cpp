@@ -14,12 +14,16 @@
 #include <yarp/os/Time.h>
 #include <yarp/os/all.h>
 #include <stdio.h>
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <ctime>
 
 
 using namespace yarp::os;
 using namespace std;
+
+bool cont = true;
 
 int main(int argc, char *argv[]) {
     Network yarp;
@@ -35,48 +39,49 @@ int main(int argc, char *argv[]) {
 	}
 	else {
         if (argc < 2) {
-            cout <<"usage: port_playback /thisPort /destPort filename"<<endl;
+            cout<<"usage: port_playback /thisPort /destPort filename"<<endl;
             return 0;
         }
         
 	}
     
-    //read input file
-    // ...
-    
     //parse input file
     // ...
     
-    
-    for (int i=0; i<numLines; i++) {
-        // get timestamp of input file
-        //  check timer value
-        // if >= curr_time, send it out
-    }
-     
-    
-
 	output.open(from_port.c_str());
 
 	yarp::os::Network::connect(from_port.c_str(),to_port.c_str());
-    int top = 100000;
-	Random::seed(std::clock());
-    for (int i=1; i<=top; i++) {
-        // prepare a message
-        Bottle bot;
-		bot.addString("testing");
-		bot.addInt(i); //id
-		bot.addInt(i); //dev type
-		bot.addInt(i); //server type
-		bot.addInt(i); //time stamp
-		for (int j=0; j<15; j++) { //15 sensor values
-			bot.addDouble(Random::uniform());
+	
+    std::clock_t start;
+	std::clock_t elapsed;
+
+	ifstream file(fn.c_str());
+	string line;
+	if (file.is_open()) {
+		start = std::clock();
+		while (cont) {
+			while (getline(file, line)) {
+				cout<<"read line: "<<line<<endl;
+				Bottle bot;
+				bot.fromString(line.c_str());
+				long t = bot.get(bot.size()-1).asInt(); //last value is timestamp
+				cout<<"t="<<t<<endl;
+				elapsed = std::clock() - start;
+				while (elapsed <= t) {
+					elapsed = std::clock() - start;
+				};
+
+				
+				bot.pop(); //remove that timestamp!
+
+				//wait, until we get past time.
+				// of course, we should handle cases where there is nothing, in which case
+				// it will hang!
+				cout<<"sending! t="<<t<<endl;
+				output.write(bot);
+			}
+			cont = false;
 		}
-        // send the message
-        output.write(bot);
-        //printf("Sent message: %s\n", bot.toString().c_str());
-        // wait a while
-        //Time::delay(1);
     }
     output.close();
     return 0;
